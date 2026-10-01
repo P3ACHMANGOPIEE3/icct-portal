@@ -1,4 +1,3 @@
-// OPEN AND CLOSE MODALS
 function openModal(modalId) {
   document.getElementById(modalId).classList.add('active');
 }
@@ -7,31 +6,59 @@ function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
 }
 
-// HANDLE LOGIN SUBMISSION
 function handleLogin(event) {
-  event.preventDefault(); // Iwas page refresh
+  event.preventDefault();
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  const errorAlert = document.getElementById('errorAlert');
 
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
-
-  // KAPAG NAG-INPUT NG KAHIT ANO, IPAPASOK SA OTP VERIFICATION MODAL
   if (user !== "" && pass !== "") {
-    document.getElementById('errorAlert').style.display = "none";
+    if (errorAlert) errorAlert.style.display = "none";
     openModal('otpModal');
   } else {
-    document.getElementById('errorAlert').style.display = "flex";
+    if (errorAlert) errorAlert.style.display = "flex";
   }
 }
 
-// SEND RESET LINK LOGIC
 function sendResetLink() {
-  closeModal('forgotModal');
-  openModal('emailSentModal');
+  const emailInput = document.getElementById('resetEmail').value.trim();
+  if (emailInput !== "") {
+    closeModal('forgotModal');
+    openModal('emailSentModal');
+  } else {
+    alert("Mag-type muna ng email!");
+  }
 }
 
-// VERIFY OTP LOGIC
 function verifyOTP() {
-  // SA SUCCESSFUL OTP, DIDERETSO SA DASHBOARD SCREEN
-  alert("OTP Verified Successfully! Redirecting to Dashboard...");
-  closeModal('otpModal');
+  const otpInputs = document.querySelectorAll('.otp-input');
+  let enteredOTP = "";
+  
+  otpInputs.forEach(input => {
+    enteredOTP += input.value.trim();
+  });
+
+  const otpError = document.getElementById('otpError');
+
+  if (enteredOTP.length > 0) {
+    if (otpError) otpError.style.display = "none";
+    alert("✅ OTP Verified Successfully!");
+    closeModal('otpModal');
+  } else {
+    if (otpError) otpError.style.display = "flex";
+  }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const inputs = document.querySelectorAll(".otp-input");
+  inputs.forEach((input, index) => {
+    input.addEventListener("keyup", (e) => {
+      if (e.target.value.length === 1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+      if (e.key === "Backspace" && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+  });
+});

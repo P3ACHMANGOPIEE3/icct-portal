@@ -5,7 +5,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* BACKGROUND IMAGE WITH FALLBACK */
 .login-body {
   background: url('bg.png') no-repeat center center fixed;
   background-size: cover;
@@ -16,14 +15,13 @@
   padding: 20px;
 }
 
-/* LOGIN CARD BOX */
 .login-card {
   background: rgba(255, 255, 255, 0.98);
   width: 100%;
   max-width: 420px;
   padding: 32px 28px;
   border-radius: 16px;
-  border: 3px solid #7DD3FC; /* Light Blue Border katulad sa Figma */
+  border: 3px solid #7DD3FC;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -32,10 +30,9 @@
   margin-bottom: 20px;
 }
 
-/* PAMPALIIT NG LOGO (TAMANG SUKAT) */
-.icct-logo-img, .logo-container img {
-  width: 90px !important;      /* Nilimita sa 90px ang lapad */
-  height: 90px !important;     /* Pantay na taas */
+.icct-logo-img {
+  width: 90px !important;
+  height: 90px !important;
   object-fit: contain;
   margin: 0 auto 10px auto;
   display: block;
@@ -45,17 +42,14 @@
   font-size: 20px;
   color: #1E3A8A;
   font-weight: 800;
-  letter-spacing: 0.5px;
 }
 
 .subtitle {
   font-size: 12px;
   color: #64748B;
   margin-top: 2px;
-  font-weight: 500;
 }
 
-/* INPUT FIELDS */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -63,9 +57,7 @@
   margin-bottom: 16px;
 }
 
-.input-group.align-left {
-  text-align: left;
-}
+.input-group.align-left { text-align: left; }
 
 .input-group label {
   font-size: 13px;
@@ -79,10 +71,6 @@
   border-radius: 8px;
   font-size: 14px;
   outline: none;
-}
-
-.input-group input:focus {
-  border-color: #2563EB;
 }
 
 .error-alert {
@@ -110,14 +98,10 @@
   color: white;
   padding: 12px;
   border: none;
-  border-radius: 20px; /* Pill Button */
+  border-radius: 20px;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
-}
-
-.btn-login:hover {
-  background: #1D4ED8;
 }
 
 .login-footer {
@@ -132,12 +116,6 @@
   font-weight: 600;
 }
 
-.login-footer p {
-  margin-top: 8px;
-  color: #64748B;
-}
-
-/* MODALS POPUP */
 .modal-backdrop {
   position: fixed;
   top: 0;

@@ -11,29 +11,27 @@
 <body class="login-body">
 
   <div class="login-card">
-    <!-- ACTUAL ICCT LOGO IMAGE -->
     <div class="logo-container">
       <img src="logo.png" alt="ICCT Logo" class="icct-logo-img">
       <h2>ICCT COLLEGES</h2>
       <p class="subtitle">Student & Personnel Payment Portal</p>
     </div>
 
-    <!-- ERROR ALERT MESSAGE -->
+    <!-- ERROR ALERT FOR LOGIN -->
     <div class="error-alert" id="errorAlert">
       <i class="fa-solid fa-triangle-exclamation"></i>
       <span>Incorrect Username or Password.</span>
     </div>
 
-    <!-- LOGIN FORM -->
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="input-group">
         <label>Username or Student ID</label>
-        <input type="text" id="username" placeholder="Enter your Student ID" required>
+        <input type="text" id="username" placeholder="Enter your Student ID">
       </div>
 
       <div class="input-group">
         <label>Password</label>
-        <input type="password" id="password" placeholder="Enter Password" required>
+        <input type="password" id="password" placeholder="Enter Password">
       </div>
 
       <div class="form-options">
@@ -49,7 +47,7 @@
     </div>
   </div>
 
-  <!-- MODAL: FORGOT PASSWORD -->
+  <!-- MODAL 1: FORGOT PASSWORD -->
   <div class="modal-backdrop" id="forgotModal">
     <div class="modal-box text-center">
       <h3>Forgot Password</h3>
@@ -60,24 +58,24 @@
         <input type="email" id="resetEmail" placeholder="user@example.com">
       </div>
 
-      <button class="btn-login full-width" onclick="sendResetLink()">Send Reset Link</button>
+      <button type="button" class="btn-login full-width" onclick="sendResetLink()">Send Reset Link</button>
       <a href="#" class="back-link" onclick="closeModal('forgotModal')">&lt; Back to Login</a>
     </div>
   </div>
 
-  <!-- MODAL: CHECK YOUR EMAIL -->
+  <!-- MODAL 2: CHECK YOUR EMAIL -->
   <div class="modal-backdrop" id="emailSentModal">
     <div class="modal-box text-center">
       <i class="fa-solid fa-envelope-circle-check icon-success"></i>
       <h3>Check your Email</h3>
       <p class="modal-desc">A password reset link has been sent to your email. Please check your inbox or spam folder.</p>
       
-      <button class="btn-login full-width" onclick="closeModal('emailSentModal')">Back to Login</button>
+      <button type="button" class="btn-login full-width" onclick="closeModal('emailSentModal')">Back to Login</button>
       <p class="resend-text">Didn't receive email? <a href="#" onclick="sendResetLink()">Resend</a></p>
     </div>
   </div>
 
-  <!-- MODAL: OTP VERIFICATION -->
+  <!-- MODAL 3: OTP VERIFICATION -->
   <div class="modal-backdrop" id="otpModal">
     <div class="modal-box text-center">
       <h3>OTP Verification</h3>
@@ -92,8 +90,13 @@
         <input type="text" maxlength="1" class="otp-input">
       </div>
 
-      <button class="btn-login full-width" onclick="verifyOTP()" style="margin-top:20px;">Verify OTP</button>
-      <p class="resend-text">Didn't receive a code? <a href="#">Resend OTP</a></p>
+      <div class="error-alert" id="otpError" style="display:none; margin-top: 15px;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>Invalid OTP code. Please try again or request a new code.</span>
+      </div>
+
+      <button type="button" class="btn-login full-width" onclick="verifyOTP()" style="margin-top:20px;">Verify OTP</button>
+      <p class="resend-text">Didn't receive a code? <a href="#" onclick="alert('New OTP code sent!')">Resend OTP</a></p>
     </div>
   </div>
 
