@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICCT Student Portal</title>
+  <!-- FontAwesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body.dashboard-body {
+      background: #F1F5F9;
+      background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+      background-size: 24px 24px;
+      min-height: 100vh;
+    }
+
+    /* TOP HEADER BAR */
+    .topbar {
+      height: 68px;
+      background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);
+      color: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 32px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+    }
+
+    .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+
+    .mini-logo {
+      width: 38px !important;
+      height: 38px !important;
+      object-fit: contain;
+    }
+
+    .portal-title { font-weight: 800; font-size: 17px; letter-spacing: 0.3px; }
+
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-text { display: flex; flex-direction: column; text-align: right; }
+    .user-name { font-weight: 700; font-size: 14px; }
+    .user-role { font-size: 11px; opacity: 0.8; }
+    .avatar-icon { font-size: 28px; color: #93C5FD; }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      color: #FCA5A5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #EF4444;
+      color: white;
+    }
+
+    .student-container { max-width: 960px; margin: 92px auto 40px; padding: 0 20px; }
+
+    /* WELCOME HERO BANNER */
+    .welcome-banner {
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+      margin-bottom: 28px;
+    }
+
+    .banner-text h2 { font-size: 24px; font-weight: 800; }
+    .banner-text p { font-size: 13px; opacity: 0.9; margin-top: 6px; }
+
+    .quick-stats { display: flex; gap: 16px; }
+    .stat-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+    .stat-value { font-size: 18px; font-weight: 800; margin-top: 2px; }
+
+    .section-header { margin-bottom: 16px; }
+    .section-header h3 { font-size: 16px; color: #334155; font-weight: 700; }
+
+    /* ACTION CARDS GRID */
+    .action-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
+
+    .action-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: all 0.25s ease;
+    }
+
+    .action-card:hover {
+      border: 2px solid #2563EB !important;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15);
+    }
+
+    .card-top { display: flex; justify-content: space-between; align-items: center; }
+
+    .card-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .card-icon-box.blue-bg { background: #EFF6FF; color: #2563EB; }
+    .card-icon-box.dark-bg { background: #F1F5F9; color: #0F172A; }
+
+    .card-badge {
+      background: #FEF3C7;
+      color: #D97706;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .card-text h3 { font-size: 16px; color: #0F172A; font-weight: 700; }
+    .card-text p { font-size: 13px; color: #64748B; margin-top: 6px; line-height: 1.4; }
+
+    .btn-card-action {
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      background: #0F172A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .action-card:hover .btn-card-action {
+      background: #2563EB !important;
+      color: white !important;
+    }
+
+    /* TRANSACTION TABLE */
+    .history-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .table-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .table-header-flex h3 { font-size: 16px; color: #0F172A; font-weight: 700; }
+    .table-subtitle { font-size: 12px; color: #94A3B8; }
+
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th { background: #F8FAFC; text-align: left; padding: 12px 16px; font-size: 12px; color: #64748B; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+    .history-table td { padding: 16px; border-bottom: 1px solid #F1F5F9; font-size: 14px; color: #334155; }
+    .history-table tr:hover { background: #F8FAFC; }
+
+    .ref-code { font-family: monospace; font-weight: 700; color: #1E293B; background: #F1F5F9; padding: 4px 8px; border-radius: 6px; font-size: 12px; }
+    .amount-text { font-weight: 700; color: #0F172A; }
+
+    .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .badge.pending { background: #FEF3C7; color: #D97706; }
+    .badge.verified { background: #DCFCE7; color: #15803D; }
+    .badge.rejected { background: #FEE2E2; color: #DC2626; }
+
+    .floating-help-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(30, 58, 138, 0.35);
+      transition: all 0.2s;
+    }
+
+    .floating-help-btn:hover { transform: scale(1.1); }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <!-- TOP HEADER BAR -->
+  <header class="topbar">
+    <div class="header-left">
+      <img src="logo.png" alt="Logo" class="mini-logo">
+      <span class="portal-title">ICCT Student Portal</span>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <i class="fa-solid fa-circle-user avatar-icon"></i>
+        <div class="user-text">
+          <span class="user-name">Jerome Opana</span>
+          <span class="user-role">Student (BSCPE)</span>
+        </div>
+      </div>
+      <a href="index.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="student-container">
+    
+    <!-- WELCOME HERO BANNER -->
+    <div class="welcome-banner">
+      <div class="banner-text">
+        <h2>Welcome back, Jerome! 👋</h2>
+        <p>Manage your school fees, purchases, and payments all in one place.</p>
+      </div>
+      <div class="quick-stats">
+        <div class="stat-box">
+          <span class="stat-label">Pending Dues</span>
+          <span class="stat-value">₱500.00</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Total Paid</span>
+          <span class="stat-value">₱350.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION CARDS SECTION -->
+    <div class="section-header">
+      <h3>Quick Actions</h3>
+    </div>
+
+    <div class="action-cards-grid">
+      
+      <!-- CARD 1: PAY FEES -->
+      <div class="action-card">
+        <div class="card-top">
+          <div class="card-icon-box blue-bg">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <span class="card-badge">Popular</span>
+        </div>
+        <div class="card-text">
+          <h3>Pay Department Fees / Membership</h3>
+          <p>Settle COE Fees, Membership Dues, and other departmental balances.</p>
+        </div>
+        <button class="btn-card-action" onclick="window.location.href='pay-fees.html'">Pay Fees Now <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <!-- CARD 2: BUY MERCHANDISE -->
+      <div class="action-card">
+        <div class="card-top">
+          <div class="card-icon-box dark-bg">
+            <i class="fa-solid fa-bag-shopping"></i>
+          </div>
+        </div>
+        <div class="card-text">
+          <h3>Buy Merchandise</h3>
+          <p>Browse official campus T-shirts, Badges, Lanyards, and school gear.</p>
+        </div>
+        <button class="btn-card-action" onclick="alert('Opening Merchandise Catalog...')">Browse Merch <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+    </div>
+
+    <!-- TRANSACTION HISTORY TABLE -->
+    <div class="history-section">
+      <div class="table-header-flex">
+        <h3>Recent Transactions</h3>
+        <span class="table-subtitle">Showing latest records</span>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Reference No</th>
+              <th>Item / Description</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref-code">GC-9012384</span></td>
+              <td>Department Dues</td>
+              <td class="amount-text">₱500.00</td>
+              <td><span class="badge pending"><i class="fa-solid fa-clock"></i> Pending</span></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">BK-5510293</span></td>
+              <td>Official T-Shirt Merch</td>
+              <td class="amount-text">₱350.00</td>
+              <td><span class="badge verified"><i class="fa-solid fa-circle-check"></i> Verified</span></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">EX-1102938</span></td>
+              <td>Late Registration Fee</td>
+              <td class="amount-text">₱150.00</td>
+              <td><span class="badge rejected"><i class="fa-solid fa-circle-xmark"></i> Rejected</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FLOATING HELP BUTTON -->
+    <button class="floating-help-btn" title="Need Help?">
+      <i class="fa-solid fa-headset"></i>
+    </button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

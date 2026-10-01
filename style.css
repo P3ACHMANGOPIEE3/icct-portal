@@ -5,6 +5,7 @@
   font-family: 'Inter', sans-serif;
 }
 
+/* LOGIN PAGE STYLES */
 .login-body {
   background: url('bg.png') no-repeat center center fixed;
   background-size: cover;
@@ -25,10 +26,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.logo-container {
-  text-align: center;
-  margin-bottom: 20px;
-}
+.logo-container { text-align: center; margin-bottom: 20px; }
 
 .icct-logo-img {
   width: 90px !important;
@@ -38,40 +36,13 @@
   display: block;
 }
 
-.logo-container h2 {
-  font-size: 20px;
-  color: #1E3A8A;
-  font-weight: 800;
-}
+.logo-container h2 { font-size: 20px; color: #1E3A8A; font-weight: 800; }
+.subtitle { font-size: 12px; color: #64748B; margin-top: 2px; }
 
-.subtitle {
-  font-size: 12px;
-  color: #64748B;
-  margin-top: 2px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
+.input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .input-group.align-left { text-align: left; }
-
-.input-group label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #475569;
-}
-
-.input-group input {
-  padding: 12px 14px;
-  border: 1px solid #CBD5E1;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-}
+.input-group label { font-size: 13px; font-weight: 600; color: #475569; }
+.input-group input { padding: 12px 14px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 14px; outline: none; }
 
 .error-alert {
   background-color: #FEF2F2;
@@ -86,11 +57,7 @@
   margin-bottom: 16px;
 }
 
-.form-options {
-  font-size: 13px;
-  color: #64748B;
-  margin-bottom: 20px;
-}
+.form-options { font-size: 13px; color: #64748B; margin-bottom: 20px; }
 
 .btn-login {
   width: 100%;
@@ -102,20 +69,15 @@
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.login-footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 13px;
-}
+.btn-login:hover { background: #1D4ED8; }
 
-.login-footer a, .back-link, .resend-text a {
-  color: #2563EB;
-  text-decoration: none;
-  font-weight: 600;
-}
+.login-footer { text-align: center; margin-top: 20px; font-size: 13px; }
+.login-footer a, .back-link, .resend-text a { color: #2563EB; text-decoration: none; font-weight: 600; }
 
+/* MODALS */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -131,32 +93,12 @@
 }
 
 .modal-backdrop.active { display: flex; }
-
-.modal-box {
-  background: white;
-  width: 380px;
-  padding: 28px;
-  border-radius: 16px;
-}
-
+.modal-box { background: white; width: 380px; padding: 28px; border-radius: 16px; }
 .text-center { text-align: center; }
 .modal-desc { font-size: 13px; color: #64748B; margin: 8px 0 20px; }
 .icon-success { font-size: 48px; color: #2563EB; margin-bottom: 12px; }
 .back-link { display: inline-block; margin-top: 16px; font-size: 13px; }
 .resend-text { font-size: 12px; color: #64748B; margin-top: 16px; }
 
-.otp-container {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-
-.otp-input {
-  width: 42px;
-  height: 48px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid #CBD5E1;
-  border-radius: 8px;
-}
+.otp-container { display: flex; gap: 8px; justify-content: center; }
+.otp-input { width: 42px; height: 48px; text-align: center; font-size: 18px; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 8px; }

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICCT Student Portal - Pay Fees</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body.dashboard-body {
+      background-color: #F8FAFC;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 64px;
+      background-color: #1E3A8A;
+      color: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 32px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    .header-left, .header-right { display: flex; align-items: center; gap: 14px; }
+    .mini-logo { width: 36px !important; height: 36px !important; object-fit: contain; }
+    .portal-title { font-weight: 700; font-size: 16px; }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-text { display: flex; flex-direction: column; text-align: right; }
+    .user-name { font-weight: 700; font-size: 14px; }
+    .user-role { font-size: 11px; opacity: 0.8; }
+    .avatar-icon { font-size: 24px; color: #FFFFFF; }
+
+    .btn-logout {
+      background-color: #EF4444;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .student-container { max-width: 800px; margin: 90px auto 40px; padding: 0 20px; }
+
+    .back-dashboard-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #2563EB;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .payment-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+
+    .payment-card-header h2 { font-size: 22px; color: #0F172A; font-weight: 800; }
+    .payment-card-header p { color: #64748B; font-size: 14px; margin-top: 4px; margin-bottom: 28px; }
+
+    .form-step-group { margin-bottom: 24px; }
+    .step-label { font-size: 15px; font-weight: 700; color: #1E293B; margin-bottom: 10px; display: block; }
+
+    .select-wrapper { position: relative; }
+    .select-wrapper select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      font-size: 15px;
+      appearance: none;
+      outline: none;
+      background: white;
+      cursor: pointer;
+    }
+
+    .select-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #64748B; pointer-events: none; }
+
+    .payment-info-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .info-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #334155; }
+    .info-icon { font-size: 18px; }
+    .gcash-color { color: #0052FF; }
+    .bank-color { color: #059669; }
+
+    .form-step-group input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .file-upload-box {
+      border: 2px dashed #CBD5E1;
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      background: #FAFAFA;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .file-upload-box:hover {
+      border-color: #2563EB;
+      background: #EFF6FF;
+    }
+
+    .upload-icon { font-size: 36px; color: #64748B; margin-bottom: 8px; }
+    .upload-text { font-size: 14px; color: #475569; }
+    .browse-btn { color: #2563EB; font-weight: 700; text-decoration: underline; }
+    .upload-subtext { display: block; font-size: 12px; color: #94A3B8; margin-top: 6px; }
+
+    .success-upload-icon { font-size: 32px; color: #16A34A; margin-bottom: 6px; }
+    .preview-filename { font-weight: 700; color: #0F172A; font-size: 14px; }
+    .change-file-btn { font-size: 12px; color: #2563EB; font-weight: 600; }
+
+    .btn-submit-payment {
+      width: 100%;
+      background: #2563EB;
+      color: white;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-submit-payment:hover { background: #1D4ED8; }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <header class="topbar">
+    <div class="header-left">
+      <img src="logo.png" alt="Logo" class="mini-logo">
+      <span class="portal-title">ICCT Student Portal</span>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <i class="fa-solid fa-circle-user avatar-icon"></i>
+        <div class="user-text">
+          <span class="user-name">Jerome Opana</span>
+          <span class="user-role">Student (BSCPE)</span>
+        </div>
+      </div>
+      <a href="index.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+    </div>
+  </header>
+
+  <main class="student-container">
+    <a href="student.html" class="back-dashboard-link">
+      <i class="fa-solid fa-chevron-left"></i> Back to Dashboard
+    </a>
+
+    <div class="payment-card">
+      <div class="payment-card-header">
+        <h2>Pay Department Fees / Membership</h2>
+        <p>Complete the payment details below to process your transaction.</p>
+      </div>
+
+      <form id="paymentForm" onsubmit="handlePaymentSubmit(event)">
+        <div class="form-step-group">
+          <label class="step-label">1. Select Fee to Pay</label>
+          <div class="select-wrapper">
+            <select id="feeType" required>
+              <option value="" disabled selected>Select Fee to Pay...</option>
+              <option value="500" data-name="Department Dues">Department Dues - ₱500.00</option>
+              <option value="300" data-name="COE/Membership Fees">COE/Membership Fees - ₱300.00</option>
+              <option value="150" data-name="Late Registration Fee">Late Registration Fee - ₱150.00</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-step-group">
+          <label class="step-label">2. Payment Details (Send payment to any of the following)</label>
+          <div class="payment-info-box">
+            <div class="info-item">
+              <i class="fa-solid fa-mobile-screen-button info-icon gcash-color"></i>
+              <div><strong>GCash:</strong> <span>0917-123-4567</span> <small>(ICCT Treasury)</small></div>
+            </div>
+            <div class="info-item">
+              <i class="fa-solid fa-building-columns info-icon bank-color"></i>
+              <div><strong>Landbank:</strong> <span>1234-5678-90</span> <small>(ICCT Colleges Foundation Inc.)</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step-group">
+          <label class="step-label">3. GCash / Bank Reference Number</label>
+          <input type="text" id="refNumber" placeholder="Enter Reference Number (e.g. 123456786)" required>
+        </div>
+
+        <div class="form-step-group">
+          <label class="step-label">4. Upload Proof of Payment (Receipt Image)</label>
+          <div class="file-upload-box" onclick="document.getElementById('receiptFile').click()">
+            <input type="file" id="receiptFile" accept="image/*,.pdf" style="display:none" onchange="previewReceiptFile(event)">
+            
+            <div id="uploadPlaceholder">
+              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+              <p class="upload-text">Drag and drop your receipt image here, or <span class="browse-btn">Browse File</span></p>
+              <small class="upload-subtext">Supported formats: JPG, PNG, PDF (Max 5MB)</small>
+            </div>
+
+            <div id="uploadPreview" style="display:none;">
+              <i class="fa-solid fa-circle-check success-upload-icon"></i>
+              <p class="preview-filename" id="fileNameText">receipt.png</p>
+              <span class="change-file-btn">Click to change file</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit-payment">Submit Payment</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
