@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICCT Personnel Portal - Payment Verification</title>
+  <!-- FontAwesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body.dashboard-body { background: #F1F5F9; background-image: radial-gradient(#CBD5E1 1px, transparent 1px); background-size: 24px 24px; min-height: 100vh; }
+    
+    .topbar { height: 68px; background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%); color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; position: fixed; top: 0; left: 0; width: 100%; z-index: 100; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15); }
+    .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+    .mini-logo { width: 38px !important; height: 38px !important; object-fit: contain; }
+    .portal-title { font-weight: 800; font-size: 17px; letter-spacing: 0.3px; }
+
+    /* CLICKABLE PERSONNEL PROFILE BUTTON */
+    .user-info-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .user-info-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .user-text { display: flex; flex-direction: column; text-align: right; }
+    .user-name { font-weight: 700; font-size: 14px; color: #FFFFFF; }
+    .user-role { font-size: 11px; opacity: 0.85; color: #E0F2FE; }
+    .avatar-icon { font-size: 26px; color: #93C5FD; }
+
+    .btn-logout { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+    .btn-logout:hover { background: #EF4444; color: white; }
+    
+    .personnel-container { max-width: 1120px; margin: 92px auto 40px; padding: 0 20px; }
+    .page-title-box { margin-bottom: 24px; }
+    .page-title-box h2 { font-size: 24px; color: #0F172A; font-weight: 800; }
+    .page-title-box p { color: #64748B; font-size: 14px; margin-top: 4px; }
+    
+    /* 4 STATS CARDS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: white; border-radius: 16px; padding: 18px 20px; border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 6px; }
+    .stat-card.yellow-card { border-left: 5px solid #F59E0B; background: #FEFCE8; }
+    .stat-card.green-card { border-left: 5px solid #10B981; background: #F0FDF4; }
+    .stat-card.red-card { border-left: 5px solid #EF4444; background: #FEF2F2; }
+    .stat-card.blue-card { border-left: 5px solid #2563EB; background: #EFF6FF; }
+    
+    .stat-card-label { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.3px; }
+    .stat-card-value { font-size: 20px; font-weight: 800; color: #0F172A; }
+    
+    .table-section-card { background: white; border-radius: 18px; padding: 24px; border: 1px solid #E2E8F0; box-shadow: 0 4px 14px rgba(0,0,0,0.03); }
+    .table-section-card h3 { font-size: 17px; color: #0F172A; font-weight: 800; margin-bottom: 18px; }
+    .verification-table { width: 100%; border-collapse: collapse; }
+    .verification-table th { background: #E2E8F0; color: #1E293B; text-align: left; padding: 14px 16px; font-size: 13px; font-weight: 800; letter-spacing: 0.3px; }
+    .verification-table td { padding: 16px; border-bottom: 1px solid #F1F5F9; font-size: 14px; color: #334155; }
+    .ref-code { font-family: monospace; font-weight: 700; color: #1E293B; background: #F1F5F9; padding: 4px 8px; border-radius: 6px; font-size: 13px; }
+    .btn-view-receipt { color: #2563EB; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: all 0.2s; }
+    .btn-view-receipt:hover { background: #EFF6FF; color: #1D4ED8; }
+    
+    .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+    .status-pill.pending { background: #FEF3C7; color: #D97706; }
+    .status-pill.verified { background: #DCFCE7; color: #15803D; }
+    .status-pill.rejected { background: #FEE2E2; color: #DC2626; }
+    
+    .action-btns-row { display: flex; gap: 8px; }
+    .btn-action-icon { width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; transition: all 0.2s; }
+    .btn-action-icon.approve { background: #DCFCE7; color: #16A34A; }
+    .btn-action-icon.approve:hover { background: #16A34A; color: white; }
+    .btn-action-icon.reject { background: #FEE2E2; color: #DC2626; }
+    .btn-action-icon.reject:hover { background: #DC2626; color: white; }
+    
+    /* MODALS */
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-backdrop.active { display: flex; }
+    
+    /* PROOF MODAL */
+    .proof-modal-box { background: white; width: 100%; max-width: 640px; border-radius: 20px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2); overflow: hidden; animation: modalSlide 0.25s ease-out; }
+    @keyframes modalSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .proof-modal-header { background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .proof-modal-header h3 { font-size: 18px; font-weight: 800; }
+    .btn-close-modal { background: #EF4444; color: white; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .proof-modal-body { padding: 24px; }
+    .proof-details-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; font-size: 14px; }
+    .proof-details-row { display: flex; gap: 12px; }
+    .proof-details-row label { width: 90px; font-weight: 700; color: #0F172A; }
+    .proof-details-row span { color: #334155; font-weight: 600; }
+    .receipt-image-preview-container { width: 100%; max-height: 320px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; padding: 12px; }
+    .receipt-image-preview-container img { max-width: 100%; max-height: 290px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .modal-action-buttons { display: flex; gap: 16px; }
+    .btn-reject-modal { flex: 1; background: #FEE2E2; color: #DC2626; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+    .btn-reject-modal:hover { background: #DC2626; color: white; }
+    .btn-approve-modal { flex: 1; background: #16A34A; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); transition: all 0.2s; }
+    .btn-approve-modal:hover { background: #15803D; transform: translateY(-1px); }
+
+    /* EDIT PERSONNEL PROFILE MODAL */
+    .profile-modal-box {
+      background: white;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      overflow: hidden;
+      animation: modalSlide 0.25s ease-out;
+    }
+
+    .profile-modal-header {
+      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+      color: white;
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-modal-header h3 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .btn-profile-close { background: rgba(255, 255, 255, 0.15); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 15px; }
+    .btn-profile-close:hover { background: #EF4444; }
+
+    .profile-modal-body { padding: 24px; }
+    .profile-avatar-row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: #F8FAFC; padding: 14px; border-radius: 12px; border: 1px solid #E2E8F0; }
+    .profile-big-avatar { width: 56px; height: 56px; background: #DBEAFE; color: #2563EB; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+    .avatar-info-text h4 { font-size: 16px; color: #0F172A; font-weight: 800; }
+    .avatar-info-text p { font-size: 12px; color: #64748B; margin-top: 2px; }
+
+    .profile-form-grid { display: flex; flex-direction: column; gap: 14px; }
+    .profile-form-group { display: flex; flex-direction: column; gap: 6px; }
+    .profile-form-group label { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+    .profile-form-group input, .profile-form-group select { padding: 12px 14px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 600; color: #0F172A; outline: none; }
+    .profile-form-group input:focus, .profile-form-group select:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+    .profile-modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #E2E8F0; }
+    .btn-save-profile { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color: white; padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .btn-cancel-profile { background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    
+    .profile-toast { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; display: none; align-items: center; gap: 8px; margin-bottom: 16px; }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <!-- TOP HEADER BAR -->
+  <header class="topbar">
+    <div class="header-left">
+      <img src="logo.png" alt="Logo" class="mini-logo">
+      <span class="portal-title">ICCT Personnel Portal</span>
+    </div>
+    <div class="header-right">
+      
+      <!-- CLICKABLE PERSONNEL PROFILE BUTTON -->
+      <div class="user-info-btn" onclick="openPersonnelProfileModal()" title="Click to edit profile">
+        <i class="fa-solid fa-circle-user avatar-icon"></i>
+        <div class="user-text">
+          <span class="user-name" id="personnelHeaderName">Jade Comia</span>
+          <span class="user-role" id="personnelHeaderRole">Finance Personnel</span>
+        </div>
+        <i class="fa-solid fa-pen-to-square" style="font-size: 11px; opacity: 0.8; margin-left:2px;"></i>
+      </div>
+
+      <a href="index.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+    </div>
+  </header>
+
+  <!-- MAIN PERSONNEL CONTENT -->
+  <main class="personnel-container">
+    
+    <div class="page-title-box">
+      <h2>Department Payment Verification</h2>
+      <p>Review and approve pending student payments and merchandise orders.</p>
+    </div>
+
+    <!-- 4 STATS CARDS GRID -->
+    <div class="stats-grid">
+      <div class="stat-card yellow-card">
+        <span class="stat-card-label">Pending Approvals</span>
+        <span class="stat-card-value" id="statPendingCount">0 pending</span>
+      </div>
+      <div class="stat-card green-card">
+        <span class="stat-card-label">Approved Today</span>
+        <span class="stat-card-value" id="statApprovedCount">45 Verified</span>
+      </div>
+      <div class="stat-card red-card">
+        <span class="stat-card-label">Total Rejections</span>
+        <span class="stat-card-value" id="statRejectedCount">0 Rejected</span>
+      </div>
+      <div class="stat-card blue-card">
+        <span class="stat-card-label">Total Collection</span>
+        <span class="stat-card-value" id="statTotalCollection">₱28,500.00</span>
+      </div>
+    </div>
+
+    <!-- PENDING SUBMISSIONS TABLE CARD -->
+    <div class="table-section-card">
+      <h3>Pending Student Submissions</h3>
+
+      <div class="table-responsive">
+        <table class="verification-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Ref No.</th>
+              <th>Item / Order</th>
+              <th>Receipt</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="personnelTableBody">
+            <!-- DYNAMIC ROWS LOADED FROM JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- EDIT PERSONNEL PROFILE MODAL -->
+  <div class="modal-backdrop" id="personnelProfileModal">
+    <div class="profile-modal-box">
+      
+      <div class="profile-modal-header">
+        <h3><i class="fa-solid fa-id-card"></i> Personnel Profile</h3>
+        <button type="button" class="btn-profile-close" onclick="closePersonnelProfileModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="profile-modal-body">
+        
+        <div class="profile-toast" id="personnelProfileToast">
+          <i class="fa-solid fa-circle-check"></i> Personnel profile updated successfully!
+        </div>
+
+        <div class="profile-avatar-row">
+          <div class="profile-big-avatar">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+          <div class="avatar-info-text">
+            <h4 id="persModalDisplayName">Jade Comia</h4>
+            <p id="persModalDisplayRole">Finance Personnel • Staff ID: PER-99201</p>
+          </div>
+        </div>
+
+        <form onsubmit="savePersonnelProfile(event)">
+          <div class="profile-form-grid">
+            
+            <div class="profile-form-group">
+              <label>Personnel Full Name</label>
+              <input type="text" id="persFullName" value="Jade Comia" required>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Designation / Role Title</label>
+              <select id="persRoleTitle">
+                <option value="Finance Personnel">Finance Personnel</option>
+                <option value="Treasury Officer">Treasury Officer</option>
+                <option value="Department Staff">Department Staff</option>
+                <option value="Academic Registrar">Academic Registrar</option>
+              </select>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Staff ID Number</label>
+              <input type="text" id="persStaffId" value="PER-99201" required>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Email Address</label>
+              <input type="email" id="persEmail" value="jadecomia14@gmail.com" required>
+            </div>
+
+          </div>
+
+          <div class="profile-modal-footer">
+            <button type="button" class="btn-cancel-profile" onclick="closePersonnelProfileModal()">Cancel</button>
+            <button type="submit" class="btn-save-profile"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROOF OF PAYMENT MODAL -->
+  <div class="modal-backdrop" id="proofModal">
+    <div class="proof-modal-box">
+      <div class="proof-modal-header">
+        <h3>Proof of Payment Details</h3>
+        <button type="button" class="btn-close-modal" onclick="closeProofModal()">X Close</button>
+      </div>
+
+      <div class="proof-modal-body">
+        <div class="proof-details-list">
+          <div class="proof-details-row">
+            <label>Student:</label>
+            <span id="modalStudentName">Jerome Opana</span>
+          </div>
+          <div class="proof-details-row">
+            <label>Item:</label>
+            <span id="modalItemDesc">Department Dues - ₱500.00</span>
+          </div>
+          <div class="proof-details-row">
+            <label>Ref No:</label>
+            <span id="modalRefNo" class="ref-code">GC-100293847</span>
+          </div>
+        </div>
+
+        <div class="receipt-image-preview-container">
+          <img id="modalReceiptImg" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600" alt="Receipt Proof">
+        </div>
+
+        <div class="modal-action-buttons">
+          <button type="button" class="btn-reject-modal" onclick="rejectSelectedPayment()">
+            <i class="fa-solid fa-xmark"></i> Reject Payment
+          </button>
+          <button type="button" class="btn-approve-modal" onclick="approveSelectedPayment()">
+            <i class="fa-solid fa-check"></i> Approve Payment
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PERSONNEL PROFILE MODAL LOGIC
+    function openPersonnelProfileModal() {
+      document.getElementById('personnelProfileModal').classList.add('active');
+    }
+
+    function closePersonnelProfileModal() {
+      document.getElementById('personnelProfileModal').classList.remove('active');
+      document.getElementById('personnelProfileToast').style.display = 'none';
+    }
+
+    function loadSavedPersonnelProfile() {
+      const savedProfile = JSON.parse(localStorage.getItem('personnelProfile'));
+      if (savedProfile) {
+        document.getElementById('persFullName').value = savedProfile.fullName;
+        document.getElementById('persRoleTitle').value = savedProfile.roleTitle;
+        document.getElementById('persStaffId').value = savedProfile.staffId;
+        document.getElementById('persEmail').value = savedProfile.email;
+
+        updatePersonnelProfileUI(savedProfile);
+      }
+    }
+
+    function updatePersonnelProfileUI(profile) {
+      document.getElementById('personnelHeaderName').textContent = profile.fullName;
+      document.getElementById('personnelHeaderRole').textContent = profile.roleTitle;
+      
+      document.getElementById('persModalDisplayName').textContent = profile.fullName;
+      document.getElementById('persModalDisplayRole').textContent = `${profile.roleTitle} • Staff ID: ${profile.staffId}`;
+    }
+
+    function savePersonnelProfile(e) {
+      e.preventDefault();
+
+      const profileData = {
+        fullName: document.getElementById('persFullName').value.trim(),
+        roleTitle: document.getElementById('persRoleTitle').value,
+        staffId: document.getElementById('persStaffId').value.trim(),
+        email: document.getElementById('persEmail').value.trim()
+      };
+
+      localStorage.setItem('personnelProfile', JSON.stringify(profileData));
+      updatePersonnelProfileUI(profileData);
+
+      const toast = document.getElementById('personnelProfileToast');
+      toast.style.display = 'flex';
+
+      setTimeout(() => {
+        closePersonnelProfileModal();
+      }, 1000);
+    }
+
+    // DEFAULT SUBMISSIONS & STATS
+    const sampleSubmissions = [
+      { id: "s1", name: "Juan Dela Cruz", ref: "GC-992018231", item: "Official T-Shirt", amount: 350, status: "Pending", receiptImg: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=600" },
+      { id: "s2", name: "Maria Clara", ref: "BK-441029381", item: "ID Lanyard", amount: 120, status: "Pending", receiptImg: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600" },
+      { id: "s3", name: "Yve Macatangay", ref: "BK-1212134223", item: "Pin Badge", amount: 80, status: "Pending", receiptImg: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=600" }
+    ];
+
+    let currentActiveIndex = null;
+    let allSubmissions = [];
+    const BASE_COLLECTION = 28500;
+    const BASE_VERIFIED_COUNT = 45;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadSavedPersonnelProfile();
+      loadSubmissions();
+    });
+
+    function loadSubmissions() {
+      const storedTransactions = JSON.parse(localStorage.getItem("userTransactions")) || [];
+      
+      allSubmissions = [
+        ...storedTransactions.map((tx, idx) => ({
+          isLocal: true,
+          localIdx: idx,
+          name: "Jerome Opana",
+          ref: tx.refNumber,
+          item: tx.feeName,
+          amount: Number(tx.amount) || 0,
+          status: tx.status || "Pending",
+          receiptImg: tx.imageDataUrl || "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600"
+        })),
+        ...sampleSubmissions
+      ];
+
+      renderTable();
+      updateStats();
+    }
+
+    function renderTable() {
+      const tableBody = document.getElementById("personnelTableBody");
+      tableBody.innerHTML = "";
+
+      allSubmissions.forEach((item, index) => {
+        let badgeClass = item.status.toLowerCase();
+        let badgeIcon = item.status === "Pending" ? "fa-clock" : item.status === "Verified" ? "fa-circle-check" : "fa-circle-xmark";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${item.name}</strong></td>
+          <td><span class="ref-code">${item.ref}</span></td>
+          <td>${item.item}</td>
+          <td>
+            <span class="btn-view-receipt" onclick="openProofModal(${index})">
+              <i class="fa-solid fa-file-lines"></i> View
+            </span>
+          </td>
+          <td>
+            <span class="status-pill ${badgeClass}">
+              <i class="fa-solid ${badgeIcon}"></i> ${item.status}
+            </span>
+          </td>
+          <td>
+            <div class="action-btns-row">
+              <button class="btn-action-icon approve" title="Approve" onclick="quickApprove(${index})">
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button class="btn-action-icon reject" title="Reject" onclick="quickReject(${index})">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function updateStats() {
+      const pendingCount = allSubmissions.filter(s => s.status === "Pending").length;
+      const verifiedItems = allSubmissions.filter(s => s.status === "Verified");
+      const rejectedCount = allSubmissions.filter(s => s.status === "Rejected").length;
+      
+      const newlyApprovedTotal = verifiedItems.reduce((sum, s) => sum + (Number(s.amount) || 0), 0);
+      const totalCollection = BASE_COLLECTION + newlyApprovedTotal;
+
+      document.getElementById("statPendingCount").textContent = `${pendingCount} pending`;
+      document.getElementById("statApprovedCount").textContent = `${BASE_VERIFIED_COUNT + verifiedItems.length} Verified`;
+      document.getElementById("statRejectedCount").textContent = `${rejectedCount} Rejected`;
+      document.getElementById("statTotalCollection").textContent = "₱" + totalCollection.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function openProofModal(index) {
+      currentActiveIndex = index;
+      const data = allSubmissions[index];
+
+      document.getElementById("modalStudentName").textContent = data.name;
+      document.getElementById("modalItemDesc").textContent = `${data.item} - ₱${Number(data.amount).toLocaleString('en-US', {minimumFractionDigits:2})}`;
+      document.getElementById("modalRefNo").textContent = data.ref;
+      document.getElementById("modalReceiptImg").src = data.receiptImg;
+
+      document.getElementById("proofModal").classList.add("active");
+    }
+
+    function closeProofModal() {
+      document.getElementById("proofModal").classList.remove("active");
+    }
+
+    function approveSelectedPayment() {
+      if (currentActiveIndex !== null) {
+        quickApprove(currentActiveIndex);
+        closeProofModal();
+      }
+    }
+
+    function rejectSelectedPayment() {
+      if (currentActiveIndex !== null) {
+        quickReject(currentActiveIndex);
+        closeProofModal();
+      }
+    }
+
+    function quickApprove(index) {
+      allSubmissions[index].status = "Verified";
+      syncLocalStorage(index, "Verified");
+      renderTable();
+      updateStats();
+    }
+
+    function quickReject(index) {
+      allSubmissions[index].status = "Rejected";
+      syncLocalStorage(index, "Rejected");
+      renderTable();
+      updateStats();
+    }
+
+    function syncLocalStorage(index, newStatus) {
+      const item = allSubmissions[index];
+      if (item && item.isLocal) {
+        let storedTransactions = JSON.parse(localStorage.getItem("userTransactions")) || [];
+        if (storedTransactions[item.localIdx]) {
+          storedTransactions[item.localIdx].status = newStatus;
+          localStorage.setItem("userTransactions", JSON.stringify(storedTransactions));
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

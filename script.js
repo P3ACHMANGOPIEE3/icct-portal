@@ -1,30 +1,70 @@
-// OPEN AND CLOSE MODAL HELPERS
+// ACTIVE USER ROLE TRACKER
+let detectedRole = "student";
+
+// OPEN & CLOSE MODAL HELPERS
 function openModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (modal) modal.classList.add('active');
+  if (modal) {
+    modal.classList.add('active');
+    if (modalId === 'otpModal') {
+      setTimeout(() => {
+        const firstInput = modal.querySelector('.otp-input');
+        if (firstInput) firstInput.focus();
+      }, 100);
+    }
+  }
 }
 
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (modal) modal.classList.remove('active');
+  if (modal) {
+    modal.classList.remove('active');
+  }
 }
 
-// LOGIN SUBMISSION
+// HANDLE LOGIN SUBMISSION & DETECT USER ROLE
 function handleLogin(event) {
   event.preventDefault();
-  const user = document.getElementById('username').value.trim();
-  const pass = document.getElementById('password').value.trim();
+
+  const user = document.getElementById('username').value.trim().toLowerCase();
+  const pass = document.getElementById('password').value.trim().toLowerCase();
   const errorAlert = document.getElementById('errorAlert');
 
-  if (user !== "" && pass !== "") {
-    if (errorAlert) errorAlert.style.display = "none";
+  if (errorAlert) errorAlert.style.display = "none";
+
+  // 1. ADMIN CREDENTIALS
+  if (user === "admin" && pass === "admin") {
+    detectedRole = "admin";
     openModal('otpModal');
-  } else {
+  } 
+  // 2. PERSONNEL CREDENTIALS
+  else if (user === "personnel" && pass === "personnel") {
+    detectedRole = "personnel";
+    openModal('otpModal');
+  } 
+  // 3. STUDENT CREDENTIALS
+  else if ((user === "student" && pass === "student") || (user !== "" && pass !== "")) {
+    detectedRole = "student";
+    openModal('otpModal');
+  } 
+  // INVALID CREDENTIALS
+  else {
     if (errorAlert) errorAlert.style.display = "flex";
   }
 }
 
-// OTP VERIFICATION
+// FORGOT PASSWORD HANDLER
+function sendResetLink() {
+  const emailInput = document.getElementById('resetEmail').value.trim();
+  if (emailInput !== "") {
+    closeModal('forgotModal');
+    openModal('emailSentModal');
+  } else {
+    alert("Please enter an email address to proceed.");
+  }
+}
+
+// OTP VERIFICATION & DYNAMIC REDIRECT
 function verifyOTP() {
   const otpInputs = document.querySelectorAll('.otp-input');
   let enteredOTP = "";
@@ -38,72 +78,54 @@ function verifyOTP() {
   if (enteredOTP.length > 0) {
     if (otpError) otpError.style.display = "none";
     closeModal('otpModal');
-    window.location.href = "student.html";
+
+    // REDIRECT BASED ON DETECTED ROLE
+    if (detectedRole === "admin") {
+      window.location.href = "admin.html";
+    } else if (detectedRole === "personnel") {
+      window.location.href = "personnel.html";
+    } else {
+      window.location.href = "student.html";
+    }
   } else {
     if (otpError) otpError.style.display = "flex";
   }
 }
 
-// REDIRECT TO PAYMENT PAGE
-function goToPayFees() {
-  window.location.href = "pay-fees.html";
-}
+// AUTOMATIC OTP BOX JUMP & PASTE HANDLER
+document.addEventListener("DOMContentLoaded", () => {
+  const inputs = document.querySelectorAll(".otp-input");
 
-// RECEIPT FILE PREVIEW FUNCTIONALITY
-function previewReceiptFile(event) {
-  const file = event.target.files[0];
-  const placeholder = document.getElementById('uploadPlaceholder');
-  const preview = document.getElementById('uploadPreview');
-  const fileNameText = document.getElementById('fileNameText');
+  inputs.forEach((input, index) => {
+    input.addEventListener("input", (e) => {
+      const val = e.target.value;
+      if (val.length >= 1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
 
-  if (file) {
-    placeholder.style.display = "none";
-    preview.style.display = "block";
-    fileNameText.textContent = file.name;
-  }
-}
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
 
-// PAYMENT SUBMISSION HANDLER WITH LOCALSTORAGE FOR PERSONNEL VERIFICATION
-function handlePaymentSubmit(event) {
-  event.preventDefault();
-  
-  const selectElem = document.getElementById('feeType');
-  const feeAmount = selectElem.value;
-  const selectedOption = selectElem.options[selectElem.selectedIndex];
-  const feeName = selectedOption.getAttribute('data-name') || "Department Dues";
-  
-  const refNumber = document.getElementById('refNumber').value.trim();
-  const receiptFileInput = document.getElementById('receiptFile');
-
-  if (!feeAmount) {
-    alert("Please select a fee type.");
-    return;
-  }
-
-  if (refNumber === "") {
-    alert("Please enter a valid reference number.");
-    return;
-  }
-
-  if (receiptFileInput.files.length === 0) {
-    alert("Please upload your proof of payment receipt image.");
-    return;
-  }
-
-  const uploadedFileName = receiptFileInput.files[0].name;
-
-  // SAVE PAYMENT TO LOCALSTORAGE SO PERSONNEL CAN READ IT LATER
-  const paymentData = {
-    feeName: feeName,
-    amount: feeAmount,
-    refNumber: refNumber,
-    fileName: uploadedFileName,
-    status: "Pending",
-    date: new Date().toLocaleDateString()
-  };
-
-  localStorage.setItem("latestPayment", JSON.stringify(paymentData));
-
-  // REDIRECT TO ENHANCED CONFIRMATION PAGE
-  window.location.href = "payment-success.html";
-}
+    input.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const pastedData = (e.clipboardData || window.clipboardData).getData("text").trim();
+      
+      if (pastedData) {
+        const digits = pastedData.split("");
+        inputs.forEach((otpInput, i) => {
+          if (digits[i]) {
+            otpInput.value = digits[i];
+          }
+        });
+        const lastIndex = Math.min(digits.length, inputs.length) - 1;
+        if (lastIndex >= 0) {
+          inputs[lastIndex].focus();
+        }
+      }
+    });
+  });
+});

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICCT Student Portal - Official Merchandise</title>
+  <!-- FontAwesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body.dashboard-body { background: #F1F5F9; background-image: radial-gradient(#CBD5E1 1px, transparent 1px); background-size: 24px 24px; min-height: 100vh; }
+    .topbar { height: 68px; background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%); color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; position: fixed; top: 0; left: 0; width: 100%; z-index: 100; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15); }
+    .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+    .mini-logo { width: 38px !important; height: 38px !important; object-fit: contain; }
+    .portal-title { font-weight: 800; font-size: 17px; letter-spacing: 0.3px; }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-text { display: flex; flex-direction: column; text-align: right; }
+    .user-name { font-weight: 700; font-size: 14px; }
+    .user-role { font-size: 11px; opacity: 0.8; }
+    .avatar-icon { font-size: 28px; color: #93C5FD; }
+    .btn-logout { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+    .btn-logout:hover { background: #EF4444; color: white; }
+    .student-container { max-width: 960px; margin: 92px auto 40px; padding: 0 20px; }
+    .back-dashboard-link { display: inline-flex; align-items: center; gap: 8px; color: #2563EB; font-weight: 700; text-decoration: none; font-size: 14px; margin-bottom: 20px; transition: all 0.2s; }
+    .back-dashboard-link:hover { color: #1D4ED8; transform: translateX(-4px); }
+    .merch-hero-banner { background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); color: white; border-radius: 20px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2); display: flex; justify-content: space-between; align-items: center; }
+    .merch-hero-banner h2 { font-size: 24px; font-weight: 800; }
+    .merch-hero-banner p { font-size: 13px; opacity: 0.9; margin-top: 6px; }
+    .hero-tag { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .filter-tabs-container { display: flex; gap: 10px; margin-bottom: 28px; overflow-x: auto; padding-bottom: 4px; }
+    .filter-btn { background: white; color: #475569; border: 1px solid #CBD5E1; padding: 10px 20px; border-radius: 30px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .filter-btn:hover { border-color: #2563EB; color: #2563EB; background: #EFF6FF; }
+    .filter-btn.active { background: #2563EB; color: white; border-color: #2563EB; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    .merch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 40px; }
+    .product-card { background: white; border-radius: 18px; border: 1px solid #E2E8F0; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: all 0.25s ease; }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 14px 28px rgba(37, 99, 235, 0.12); border-color: #2563EB; }
+    .product-img-box { height: 200px; background: #F8FAFC; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border-bottom: 1px solid #F1F5F9; }
+    .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .product-card:hover .product-img { transform: scale(1.05); }
+    .category-badge { position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.75); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; backdrop-filter: blur(4px); letter-spacing: 0.5px; }
+    .product-details { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; gap: 14px; }
+    .product-name { font-size: 16px; font-weight: 800; color: #0F172A; line-height: 1.3; }
+    .product-desc { font-size: 12px; color: #64748B; line-height: 1.4; margin-top: 4px; }
+    .product-price { font-size: 20px; font-weight: 800; color: #2563EB; }
+    .btn-buy-merch { background: #0F172A; color: white; padding: 12px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; }
+    .product-card:hover .btn-buy-merch { background: #2563EB; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-backdrop.active { display: flex; }
+    .modal-box-wide { background: white; width: 100%; max-width: 780px; border-radius: 20px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2); overflow: hidden; display: flex; flex-direction: column; }
+    .modal-header-bar { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header-bar h3 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .btn-modal-close { background: #EF4444; color: white; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .modal-content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 24px; padding: 28px; }
+    .modal-left-form { display: flex; flex-direction: column; gap: 12px; }
+    .modal-right-preview { display: flex; flex-direction: column; gap: 12px; }
+    .checkout-item-image-box { width: 100%; height: 220px; border-radius: 14px; border: 1px solid #E2E8F0; overflow: hidden; background: #F8FAFC; }
+    .checkout-item-image-box img { width: 100%; height: 100%; object-fit: cover; }
+    .checkout-item-summary { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px; }
+    .price-tag-big { font-size: 26px; font-weight: 800; color: #2563EB; margin-bottom: 2px; }
+    .qty-row-box { display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; }
+    .qty-controls-wrapper { display: flex; align-items: center; background: white; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden; }
+    .btn-qty-action { background: #EFF6FF; color: #2563EB; border: none; width: 32px; height: 32px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .qty-number-display { width: 38px; height: 32px; border: none; text-align: center; font-size: 14px; font-weight: 800; color: #0F172A; outline: none; background: transparent; }
+    .size-pills-row { display: flex; gap: 8px; }
+    .size-pill { background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .size-pill.active { background: #2563EB; color: white; border-color: #2563EB; }
+    .payment-notice-mini { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #1E40AF; display: flex; align-items: center; gap: 8px; }
+    .form-group-checkout label { font-size: 13px; font-weight: 700; color: #1E293B; margin-bottom: 6px; display: block; }
+    .form-group-checkout input[type="text"] { width: 100%; padding: 12px 14px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; outline: none; }
+    .modal-receipt-box { border: 2px dashed #CBD5E1; border-radius: 10px; padding: 12px; text-align: center; background: #FAFAFA; cursor: pointer; }
+    .btn-confirm-pay { width: 100%; background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <header class="topbar">
+    <div class="header-left">
+      <img src="logo.png" alt="Logo" class="mini-logo">
+      <span class="portal-title">ICCT Student Portal</span>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <i class="fa-solid fa-circle-user avatar-icon"></i>
+        <div class="user-text">
+          <span class="user-name">Jerome Opana</span>
+          <span class="user-role">Student (BSCPE)</span>
+        </div>
+      </div>
+      <a href="index.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+    </div>
+  </header>
+
+  <main class="student-container">
+    <a href="student.html" class="back-dashboard-link">
+      <i class="fa-solid fa-chevron-left"></i> Back to Dashboard
+    </a>
+
+    <div class="merch-hero-banner">
+      <div>
+        <h2>ICCT Official Merchandise</h2>
+        <p>Order official department shirts, badges, lanyards, and campus gear online.</p>
+      </div>
+      <div class="hero-tag"><i class="fa-solid fa-shield-halved"></i> Official Store</div>
+    </div>
+
+    <div class="filter-tabs-container">
+      <button class="filter-btn active" onclick="filterCategory('all', this)"><i class="fa-solid fa-border-all"></i> All Items</button>
+      <button class="filter-btn" onclick="filterCategory('apparel', this)"><i class="fa-solid fa-shirt"></i> Apparel</button>
+      <button class="filter-btn" onclick="filterCategory('accessories', this)"><i class="fa-solid fa-id-card"></i> Accessories & Lanyards</button>
+      <button class="filter-btn" onclick="filterCategory('badges', this)"><i class="fa-solid fa-award"></i> Pins & Badges</button>
+    </div>
+
+    <div class="merch-grid" id="merchGrid">
+      
+      <!-- DEFAULT BASE MERCHANDISE ITEMS -->
+      <div class="product-card" data-category="apparel">
+        <div class="product-img-box">
+          <span class="category-badge">Apparel</span>
+          <img src="shirt.jpg" alt="Official T-Shirt" class="product-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400';">
+        </div>
+        <div class="product-details">
+          <div>
+            <h3 class="product-name">Official Department T-Shirt</h3>
+            <p class="product-desc">High quality cotton fabric with official ICCT logo print.</p>
+          </div>
+          <div class="product-price">₱350.00</div>
+          <button class="btn-buy-merch" onclick="openBuyModal('Official Department T-Shirt', 350, 'shirt.jpg', true)">
+            <i class="fa-solid fa-cart-shopping"></i> Buy Item
+          </button>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="accessories">
+        <div class="product-img-box">
+          <span class="category-badge">Accessories</span>
+          <img src="lanyard.jpg.avif" alt="Official Lanyard" class="product-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400';">
+        </div>
+        <div class="product-details">
+          <div>
+            <h3 class="product-name">ICCT Lanyard & Badge Holder</h3>
+            <p class="product-desc">Durable strap with metallic clip and ID badge holder.</p>
+          </div>
+          <div class="product-price">₱120.00</div>
+          <button class="btn-buy-merch" onclick="openBuyModal('ICCT Lanyard & Badge Holder', 120, 'lanyard.jpg.avif', false)">
+            <i class="fa-solid fa-cart-shopping"></i> Buy Item
+          </button>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="badges">
+        <div class="product-img-box">
+          <span class="category-badge">Badges</span>
+          <img src="badge.jpg" alt="Department Pin" class="product-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535295972055-1c762f4483e5?w=400';">
+        </div>
+        <div class="product-details">
+          <div>
+            <h3 class="product-name">BSCPE Metal Pin Badge</h3>
+            <p class="product-desc">Official Computer Engineering brass pin badge.</p>
+          </div>
+          <div class="product-price">₱80.00</div>
+          <button class="btn-buy-merch" onclick="openBuyModal('BSCPE Metal Pin Badge', 80, 'badge.jpg', false)">
+            <i class="fa-solid fa-cart-shopping"></i> Buy Item
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal-box-wide">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-bag-shopping"></i> Order Checkout</h3>
+        <button type="button" class="btn-modal-close" onclick="closeModal('checkoutModal')">
+          <i class="fa-solid fa-xmark"></i> Close
+        </button>
+      </div>
+
+      <div class="modal-content-grid">
+        <div class="modal-left-form">
+          <div class="price-tag-big" id="modalDisplayPrice">₱350.00</div>
+
+          <div class="qty-row-box">
+            <span class="qty-row-label">Quantity:</span>
+            <div class="qty-controls-wrapper">
+              <button type="button" class="btn-qty-action" onclick="changeQty(-1)">-</button>
+              <input type="text" id="itemQtyInput" class="qty-number-display" value="1" readonly>
+              <button type="button" class="btn-qty-action" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+
+          <div class="size-selector-box" id="sizeSelectorGroup">
+            <label class="form-group-checkout" style="margin-bottom:2px;">Select Size:</label>
+            <div class="size-pills-row">
+              <button type="button" class="size-pill" onclick="selectSize('Small', this)">Small</button>
+              <button type="button" class="size-pill active" onclick="selectSize('Medium', this)">Medium</button>
+              <button type="button" class="size-pill" onclick="selectSize('Large', this)">Large</button>
+              <button type="button" class="size-pill" onclick="selectSize('XL', this)">XL</button>
+            </div>
+          </div>
+
+          <div class="payment-notice-mini">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <span><strong>GCash:</strong> 0917-123-4567 (ICCT Treasury)</span>
+          </div>
+
+          <form onsubmit="handleCheckoutSubmit(event)">
+            <div class="form-group-checkout">
+              <label>Reference Number:</label>
+              <input type="text" id="checkoutRef" placeholder="Enter GCash Ref No. (e.g. 1002938475612)" maxlength="13" required>
+            </div>
+
+            <div class="form-group-checkout">
+              <label>Upload Receipt Image:</label>
+              <div class="modal-receipt-box" onclick="document.getElementById('checkoutReceiptFile').click()">
+                <input type="file" id="checkoutReceiptFile" accept="image/*" style="display:none" onchange="previewCheckoutFile(event)" required>
+                <div id="checkoutUploadText">
+                  <i class="fa-solid fa-cloud-arrow-up" style="font-size: 20px; color:#2563EB;"></i>
+                  <p style="font-size: 11px; color:#475569; margin-top:2px;">Drag and drop receipt image here, or <span style="color:#2563EB; font-weight:700; text-decoration:underline;">Browse File</span></p>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-confirm-pay">Confirm Order & Pay</button>
+          </form>
+        </div>
+
+        <div class="modal-right-preview">
+          <div class="checkout-item-image-box">
+            <img id="checkoutPreviewImage" src="shirt.jpg" alt="Item Preview">
+          </div>
+          <div class="checkout-item-summary">
+            <h4 id="checkoutItemTitle">Official Department T-Shirt</h4>
+            <p>Official ICCT Campus Gear</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedMerchName = "";
+    let unitPrice = 0;
+    let currentQuantity = 1;
+    let selectedSize = "Medium";
+    let hasSizesAvailable = false;
+    let uploadedMerchDataUrl = "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCustomAdminRecords();
+    });
+
+    // LOAD CUSTOM MERCHANDISE CREATED BY ADMIN FROM LOCALSTORAGE
+    function loadCustomAdminRecords() {
+      const customRecords = JSON.parse(localStorage.getItem("customMerchRecords")) || [];
+      const merchGrid = document.getElementById("merchGrid");
+
+      customRecords.forEach(rec => {
+        if (rec.type === "Merchandise Item") {
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.setAttribute("data-category", rec.category || "apparel");
+
+          const formattedPrice = Number(rec.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const badgeText = rec.category ? rec.category.toUpperCase() : "APPAREL";
+
+          card.innerHTML = `
+            <div class="product-img-box">
+              <span class="category-badge">${badgeText}</span>
+              <img src="${rec.imgSrc}" alt="${rec.title}" class="product-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400';">
+            </div>
+            <div class="product-details">
+              <div>
+                <h3 class="product-name">${rec.title}</h3>
+                <p class="product-desc">Official ICCT Campus Merchandise Item.</p>
+              </div>
+              <div class="product-price">₱${formattedPrice}</div>
+              <button class="btn-buy-merch" onclick="openBuyModal('${rec.title}', ${rec.amount}, '${rec.imgSrc}', ${rec.hasSizes})">
+                <i class="fa-solid fa-cart-shopping"></i> Buy Item
+              </button>
+            </div>
+          `;
+
+          merchGrid.appendChild(card);
+        }
+      });
+    }
+
+    function filterCategory(category, btnElement) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.style.display = (category === 'all' || card.getAttribute('data-category') === category) ? 'flex' : 'none';
+      });
+    }
+
+    function openBuyModal(name, price, imageSrc, hasSizes) {
+      selectedMerchName = name;
+      unitPrice = price;
+      currentQuantity = 1;
+      hasSizesAvailable = hasSizes;
+      selectedSize = hasSizes ? "Medium" : "N/A";
+
+      document.getElementById('checkoutItemTitle').textContent = name;
+      document.getElementById('itemQtyInput').value = currentQuantity;
+      updateTotalPriceDisplay();
+      document.getElementById('checkoutPreviewImage').src = imageSrc;
+      document.getElementById('sizeSelectorGroup').style.display = hasSizes ? "flex" : "none";
+      document.getElementById('checkoutModal').classList.add('active');
+    }
+
+    function changeQty(amount) {
+      if (currentQuantity + amount >= 1) {
+        currentQuantity += amount;
+        document.getElementById('itemQtyInput').value = currentQuantity;
+        updateTotalPriceDisplay();
+      }
+    }
+
+    function updateTotalPriceDisplay() {
+      const total = unitPrice * currentQuantity;
+      document.getElementById('modalDisplayPrice').textContent = "₱" + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function selectSize(size, btnElem) {
+      selectedSize = size;
+      document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('active'));
+      btnElem.classList.add('active');
+    }
+
+    function previewCheckoutFile(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('checkoutUploadText').innerHTML = `<i class="fa-solid fa-circle-check" style="font-size: 22px; color:#16A34A;"></i><p style="font-weight:700; color:#0F172A; font-size:12px;">${file.name}</p>`;
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedMerchDataUrl = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleCheckoutSubmit(e) {
+      e.preventDefault();
+      const ref = document.getElementById('checkoutRef').value.trim();
+      const fileInput = document.getElementById('checkoutReceiptFile');
+
+      if (ref.length !== 13 || isNaN(ref) || fileInput.files.length === 0) {
+        alert("Please enter a valid 13-digit Reference Number and upload a receipt.");
+        return;
+      }
+
+      let sizeInfo = hasSizesAvailable ? `, Size: ${selectedSize}` : '';
+      let itemNameFormatted = `${selectedMerchName} (x${currentQuantity}${sizeInfo})`;
+
+      const newTransaction = {
+        feeName: itemNameFormatted,
+        amount: unitPrice * currentQuantity,
+        refNumber: ref,
+        fileName: fileInput.files[0].name,
+        imageDataUrl: uploadedMerchDataUrl || "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600",
+        status: "Pending",
+        date: new Date().toLocaleDateString()
+      };
+
+      let transactions = JSON.parse(localStorage.getItem("userTransactions")) || [];
+      transactions.unshift(newTransaction);
+      localStorage.setItem("userTransactions", JSON.stringify(transactions));
+      localStorage.setItem("latestPayment", JSON.stringify(newTransaction));
+
+      window.location.href = "payment-success.html";
+    }
+  </script>
+</body>
+</html>

@@ -50,11 +50,28 @@
 
     .portal-title { font-weight: 800; font-size: 17px; letter-spacing: 0.3px; }
 
-    .user-info { display: flex; align-items: center; gap: 10px; }
+    /* CLICKABLE USER PROFILE TRIGGER */
+    .user-info-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .user-info-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
     .user-text { display: flex; flex-direction: column; text-align: right; }
-    .user-name { font-weight: 700; font-size: 14px; }
-    .user-role { font-size: 11px; opacity: 0.8; }
-    .avatar-icon { font-size: 28px; color: #93C5FD; }
+    .user-name { font-weight: 700; font-size: 14px; color: #FFFFFF; }
+    .user-role { font-size: 11px; opacity: 0.85; color: #E0F2FE; }
+    .avatar-icon { font-size: 26px; color: #93C5FD; }
 
     .btn-logout {
       background: rgba(239, 68, 68, 0.15);
@@ -205,23 +222,191 @@
     .badge.verified { background: #DCFCE7; color: #15803D; }
     .badge.rejected { background: #FEE2E2; color: #DC2626; }
 
-    .floating-help-btn {
+    /* EDIT PROFILE MODAL STYLES */
+    .modal-backdrop {
       position: fixed;
-      bottom: 28px;
-      right: 28px;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .profile-modal-box {
+      background: white;
+      width: 100%;
+      max-width: 580px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      overflow: hidden;
+      animation: modalSlide 0.25s ease-out;
+    }
+
+    @keyframes modalSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .profile-modal-header {
       background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
       color: white;
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-modal-header h3 {
       font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-profile-close {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: none;
+      width: 34px; height: 34px;
+      border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(30, 58, 138, 0.35);
+      font-size: 16px;
       transition: all 0.2s;
     }
 
-    .floating-help-btn:hover { transform: scale(1.1); }
+    .btn-profile-close:hover { background: #EF4444; }
+
+    .profile-modal-body {
+      padding: 28px;
+    }
+
+    .profile-avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+      background: #F8FAFC;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .profile-big-avatar {
+      width: 64px; height: 64px;
+      background: #DBEAFE;
+      color: #2563EB;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+
+    .avatar-info-text h4 { font-size: 16px; color: #0F172A; font-weight: 800; }
+    .avatar-info-text p { font-size: 12px; color: #64748B; margin-top: 2px; }
+
+    .profile-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .profile-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .profile-form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .profile-form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .profile-form-group input, .profile-form-group select {
+      padding: 12px 14px;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0F172A;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .profile-form-group input:focus, .profile-form-group select:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .profile-modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid #E2E8F0;
+    }
+
+    .btn-save-profile {
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-save-profile:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4); }
+
+    .btn-cancel-profile {
+      background: #F1F5F9;
+      color: #64748B;
+      border: 1px solid #CBD5E1;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel-profile:hover { background: #E2E8F0; color: #0F172A; }
+
+    .profile-toast {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
   </style>
 </head>
 <body class="dashboard-body">
@@ -233,13 +418,17 @@
       <span class="portal-title">ICCT Student Portal</span>
     </div>
     <div class="header-right">
-      <div class="user-info">
+      
+      <!-- CLICKABLE PROFILE BUTTON -->
+      <div class="user-info-btn" onclick="openProfileModal()" title="Click to edit profile">
         <i class="fa-solid fa-circle-user avatar-icon"></i>
         <div class="user-text">
-          <span class="user-name">Jerome Opana</span>
-          <span class="user-role">Student (BSCPE)</span>
+          <span class="user-name" id="headerUserName">Jerome Opana</span>
+          <span class="user-role" id="headerUserCourse">Student (BSCPE)</span>
         </div>
+        <i class="fa-solid fa-pen-to-square" style="font-size: 11px; opacity: 0.8; margin-left:2px;"></i>
       </div>
+
       <a href="index.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
     </div>
   </header>
@@ -250,7 +439,7 @@
     <!-- WELCOME HERO BANNER -->
     <div class="welcome-banner">
       <div class="banner-text">
-        <h2>Welcome back, Jerome! 👋</h2>
+        <h2>Welcome back, <span id="bannerGreetingName">Jerome</span>! 👋</h2>
         <p>Manage your school fees, purchases, and payments all in one place.</p>
       </div>
       <div class="quick-stats">
@@ -298,7 +487,7 @@
           <h3>Buy Merchandise</h3>
           <p>Browse official campus T-shirts, Badges, Lanyards, and school gear.</p>
         </div>
-        <button class="btn-card-action" onclick="alert('Opening Merchandise Catalog...')">Browse Merch <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="btn-card-action" onclick="window.location.href='merch.html'">Browse Merch <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
     </div>
@@ -320,7 +509,8 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="transactionTableBody">
+            <!-- DEFAULT BASE RECORDS -->
             <tr>
               <td><span class="ref-code">GC-9012384</span></td>
               <td>Department Dues</td>
@@ -343,13 +533,193 @@
         </table>
       </div>
     </div>
-
-    <!-- FLOATING HELP BUTTON -->
-    <button class="floating-help-btn" title="Need Help?">
-      <i class="fa-solid fa-headset"></i>
-    </button>
   </main>
 
+  <!-- EDIT STUDENT PROFILE MODAL -->
+  <div class="modal-backdrop" id="profileModal">
+    <div class="profile-modal-box">
+      
+      <div class="profile-modal-header">
+        <h3><i class="fa-solid fa-id-card"></i> Student Profile</h3>
+        <button type="button" class="btn-profile-close" onclick="closeProfileModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="profile-modal-body">
+        
+        <div class="profile-toast" id="profileToast">
+          <i class="fa-solid fa-circle-check"></i> Profile information updated successfully!
+        </div>
+
+        <div class="profile-avatar-row">
+          <div class="profile-big-avatar">
+            <i class="fa-solid fa-user-graduate"></i>
+          </div>
+          <div class="avatar-info-text">
+            <h4 id="profileModalDisplayName">Jerome Opana</h4>
+            <p id="profileModalDisplayCourse">BSCPE • Student ID: 2024-88192</p>
+          </div>
+        </div>
+
+        <form onsubmit="saveStudentProfile(event)">
+          <div class="profile-form-grid">
+            
+            <div class="profile-form-group">
+              <label>Full Name</label>
+              <input type="text" id="profFullName" value="Jerome Opana" required>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Student ID Number</label>
+              <input type="text" id="profStudentId" value="2024-88192" required>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Course / Program</label>
+              <select id="profCourse">
+                <option value="BSCPE">BSCPE (Computer Engineering)</option>
+                <option value="BSIT">BSIT (Information Technology)</option>
+                <option value="BSCS">BSCS (Computer Science)</option>
+                <option value="BSBA">BSBA (Business Administration)</option>
+              </select>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Year Level</label>
+              <select id="profYearLevel">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year" selected>4th Year</option>
+              </select>
+            </div>
+
+            <div class="profile-form-group full-width">
+              <label>Email Address</label>
+              <input type="email" id="profEmail" value="jadecomia14@gmail.com" required>
+            </div>
+
+            <div class="profile-form-group">
+              <label>Contact Number</label>
+              <input type="text" id="profPhone" value="0917-889-1204">
+            </div>
+
+            <div class="profile-form-group">
+              <label>Campus Satellite</label>
+              <input type="text" id="profCampus" value="San Mateo Satellite Campus" readonly style="background:#F1F5F9; color:#64748B;">
+            </div>
+
+          </div>
+
+          <div class="profile-modal-footer">
+            <button type="button" class="btn-cancel-profile" onclick="closeProfileModal()">Cancel</button>
+            <button type="submit" class="btn-save-profile"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+
   <script src="script.js"></script>
+  <script>
+    // PROFILE MODAL LOGIC & LOCALSTORAGE PERSISTENCE
+    function openProfileModal() {
+      document.getElementById('profileModal').classList.add('active');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('active');
+      document.getElementById('profileToast').style.display = 'none';
+    }
+
+    function loadSavedProfile() {
+      const savedProfile = JSON.parse(localStorage.getItem('studentProfile'));
+      if (savedProfile) {
+        document.getElementById('profFullName').value = savedProfile.fullName;
+        document.getElementById('profStudentId').value = savedProfile.studentId;
+        document.getElementById('profCourse').value = savedProfile.course;
+        document.getElementById('profYearLevel').value = savedProfile.yearLevel;
+        document.getElementById('profEmail').value = savedProfile.email;
+        document.getElementById('profPhone').value = savedProfile.phone;
+
+        // Update UI displays
+        updateDashboardProfileUI(savedProfile);
+      }
+    }
+
+    function updateDashboardProfileUI(profile) {
+      document.getElementById('headerUserName').textContent = profile.fullName;
+      document.getElementById('headerUserCourse').textContent = `Student (${profile.course})`;
+      
+      const firstName = profile.fullName.split(' ')[0] || "Jerome";
+      document.getElementById('bannerGreetingName').textContent = firstName;
+
+      document.getElementById('profileModalDisplayName').textContent = profile.fullName;
+      document.getElementById('profileModalDisplayCourse').textContent = `${profile.course} (${profile.yearLevel}) • ID: ${profile.studentId}`;
+    }
+
+    function saveStudentProfile(e) {
+      e.preventDefault();
+
+      const profileData = {
+        fullName: document.getElementById('profFullName').value.trim(),
+        studentId: document.getElementById('profStudentId').value.trim(),
+        course: document.getElementById('profCourse').value,
+        yearLevel: document.getElementById('profYearLevel').value,
+        email: document.getElementById('profEmail').value.trim(),
+        phone: document.getElementById('profPhone').value.trim()
+      };
+
+      localStorage.setItem('studentProfile', JSON.stringify(profileData));
+      updateDashboardProfileUI(profileData);
+
+      const toast = document.getElementById('profileToast');
+      toast.style.display = 'flex';
+
+      setTimeout(() => {
+        closeProfileModal();
+      }, 1000);
+    }
+
+    // LOAD ALL DYNAMIC TRANSACTIONS FROM LOCALSTORAGE
+    document.addEventListener("DOMContentLoaded", () => {
+      loadSavedProfile();
+
+      const tableBody = document.getElementById("transactionTableBody");
+      const userTransactions = JSON.parse(localStorage.getItem("userTransactions")) || [];
+
+      if (userTransactions.length > 0 && tableBody) {
+        let dynamicRowsHTML = "";
+
+        userTransactions.forEach((tx, index) => {
+          const formattedAmount = Number(tx.amount).toLocaleString('en-US', { 
+            minimumFractionDigits: 2, 
+            maximumFractionDigits: 2 
+          });
+
+          let statusBadge = `<span class="badge pending"><i class="fa-solid fa-clock"></i> Pending</span>`;
+          if (tx.status === "Verified") {
+            statusBadge = `<span class="badge verified"><i class="fa-solid fa-circle-check"></i> Verified</span>`;
+          } else if (tx.status === "Rejected") {
+            statusBadge = `<span class="badge rejected"><i class="fa-solid fa-circle-xmark"></i> Rejected</span>`;
+          }
+
+          const bgStyle = index === 0 ? "background: #EFF6FF;" : "";
+
+          dynamicRowsHTML += `
+            <tr style="${bgStyle}">
+              <td><span class="ref-code">${tx.refNumber}</span></td>
+              <td><strong>${tx.feeName}</strong></td>
+              <td class="amount-text">₱${formattedAmount}</td>
+              <td>${statusBadge}</td>
+            </tr>
+          `;
+        });
+
+        tableBody.insertAdjacentHTML("afterbegin", dynamicRowsHTML);
+      }
+    });
+  </script>
 </body>
 </html>
